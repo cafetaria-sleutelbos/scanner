@@ -11,7 +11,7 @@ from typing import Tuple, Union
 from deskew import determine_skew
 
 pathResults = './results/'
-backoffice_url = 'http://sleutelbos-backoffice.herokuapp.com/api/orders'
+backoffice_url = 'https://jellyfish-app-kkaj7.ondigitalocean.app/api/orders'
 request_headers = {"Content-Type":"multipart/form-data", "Accept":"application/json"}
 
 for tempImgName in os.listdir(pathResults):
@@ -84,11 +84,12 @@ counter = 1
 while True:
     # Capture frame-by-frame
     ret, frame = cap.read()
-    if counter % 60 == 0:
+    if cv2.waitKey(1) & 0xFF == ord('s'):
         # process_thread = threading.Thread(target=processFrame, name="FrameProcessor", args=[frame])
         # print('starting process')
         # process_thread.start()
         processFrame(frame)
+    
  
     counter += 1
     # Display the resulting frame
