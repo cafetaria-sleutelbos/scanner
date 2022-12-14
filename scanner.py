@@ -12,7 +12,8 @@ from deskew import determine_skew
 
 pathResults = './results/'
 backoffice_url = 'https://jellyfish-app-kkaj7.ondigitalocean.app/api/orders'
-request_headers = {"Content-Type":"multipart/form-data", "Accept":"application/json"}
+backoffice_url = 'http://ac43-86-87-60-19.eu.ngrok.io/api'
+request_headers = {"Content-Type":"application/x-www-form-urlencoded", "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9"}
 
 for tempImgName in os.listdir(pathResults):
     tempImagePath = os.path.join(pathResults, tempImgName)
@@ -66,9 +67,12 @@ def processFrame(frame):
  
     d = pytesseract.image_to_data(frame, output_type=Output.DICT, config='--psm 4')
     non_empty_text = list(filter(lambda item: item != '', d['text']))
-    print(str(non_empty_text))
-    items = {'items': non_empty_text}
-    x = requests.post(backoffice_url, headers=request_headers, json = items)
+    print(non_empty_text)
+
+    items = {'scan': ''.join(non_empty_text)}
+    print(items)
+
+    x = requests.post(backoffice_url + '/scans', headers=request_headers, data = items)
     print(x.text)
 
     # n_boxes = lend(['text'])
@@ -89,7 +93,6 @@ while True:
         # print('starting process')
         # process_thread.start()
         processFrame(frame)
-    
  
     counter += 1
     # Display the resulting frame
