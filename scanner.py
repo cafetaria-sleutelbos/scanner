@@ -14,8 +14,8 @@ from deskew import determine_skew
 
 local = True
 pathResults = './results/'
-backoffice_url = 'https://jellyfish-app-kkaj7.ondigitalocean.app/api'
-backoffice_url = 'http://b20d-2a02-a456-3f72-1-a56c-789f-5aa-228e.eu.ngrok.io/backoffice/public/api'
+#backoffice_url = 'https://jellyfish-app-kkaj7.ondigitalocean.app/api'
+backoffice_url = 'http://5596-2a02-a456-3f72-1-d00-58e3-3632-1d96.eu.ngrok.io/backoffice/public/api'
 request_headers = {"Content-Type":"application/x-www-form-urlencoded", "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9"}
 
 for tempImgName in os.listdir(pathResults):
