@@ -11,11 +11,19 @@ import threading
 from pytesseract import Output
 from typing import Tuple, Union
 from deskew import determine_skew
+# from Adjusted.CheckAdjustedReceipt import initModel
+
+import tensorflow as tf
+
+model = tf.keras.models.load_model('Adjusted/adjustedModel.h5')
+model = model.load_weights('Adjusted/Weights_folder')
+model.summary()
+
 
 local = True
 pathResults = './results/'
-#backoffice_url = 'https://jellyfish-app-kkaj7.ondigitalocean.app/api'
-backoffice_url = 'http://5596-2a02-a456-3f72-1-d00-58e3-3632-1d96.eu.ngrok.io/backoffice/public/api'
+backoffice_url = 'https://jellyfish-app-kkaj7.ondigitalocean.app/api'
+# backoffice_url = 'http://5596-2a02-a456-3f72-1-d00-58e3-3632-1d96.eu.ngrok.io/backoffice/public/api'
 request_headers = {"Content-Type":"application/x-www-form-urlencoded", "Accept":"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,/;q=0.8,application/signed-exchange;v=b3;q=0.9"}
 
 for tempImgName in os.listdir(pathResults):
@@ -93,7 +101,7 @@ def processFrame(frame):
     framq = rotate(frame, angle, (0, 0, 0))
 
     testFrame = frame
-    imgFloat = testFrame.astype(np.float) / 255
+    imgFloat = testFrame.astype(float) / 255
     kChannel = 1 - np.max(imgFloat, axis=2)
     kChannel = (255 * kChannel).astype(np.uint8)
 
@@ -108,19 +116,25 @@ def processFrame(frame):
     if(local):
         imgPath = pathResults + str(time.time()) + '-frame.png'
         cv2.imwrite(imgPath, frame)
-        # cv2.imwrite(pathResults + str(time.time()) + '-text-inverted.png', binaryImageInverted)
+        cv2.imwrite(pathResults + str(time.time()) + '-text-inverted.png', binaryImageInverted)
 
  
-    d = pytesseract.image_to_data(frame, output_type=Output.DICT, config='--psm 4')
-    non_empty_text = list(filter(lambda item: item != '', d['text']))
+    # d = pytesseract.image_to_data(frame, output_type=Output.DICT, config='--psm 4')
+    # non_empty_text = list(filter(lambda item: item != '', d['text']))
     # print(non_empty_text)
 
-    d2= pytesseract.image_to_data(binaryImageInverted, output_type=Output.DICT, config='--psm 4')
+    d2 = pytesseract.image_to_data(binaryImageInverted, output_type=Output.DICT, config='--psm 4')
     # print(d2)
     processedData = processTessract(d2)
     # print('inbin')
     # print(non_empty_text2)
+
+
+
+    
     print(processedData)
+    print(model.predict(frame))
+
 
 
     with open(imgPath, "rb") as f:
